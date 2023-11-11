@@ -1,6 +1,6 @@
 "# BasicLinkedList" 
 Allows for danyamicly typed linked list
-it can store multiple data types at the same time like
+it can store multiple data types at the same time like 
 [1,2,4.5,"hello"]
 
 to initialise a new linked list you do this
