@@ -8,6 +8,7 @@ class Base_node{
     virtual void print(){}
     virtual void* get_value(){return nullptr;}
     virtual std::string get_type(){return "l";}
+    
 };
 
 template<class T>
@@ -26,7 +27,7 @@ class node: public Base_node{
         }
         node(T value){
             
-            this->type = typeid(value).name();
+            this->type = typeid(T).name();
             this->value = value;
         }
 
@@ -44,6 +45,7 @@ class node: public Base_node{
 
             std::cout<<this->value;
         }
+        
 
 };
 
@@ -106,9 +108,8 @@ class linked_list{
             Base_node* current_node = root;
             while (current_node != nullptr){
                 if(count == index){
-                    
-
                     return *(T*)current_node->get_value();
+      
                 }
                 count += 1;
                 current_node = current_node->incr();
@@ -143,10 +144,7 @@ int main()
     new_list->push("T");
     new_list->print();
   
-    std::string typeofx= new_list->get_type(2);
-    char* test2 = new_list->get_value<char*>(2);
-    std::cout<<test2<<"\n";
-    std::cout<<typeofx<<"\n";
+
     int x = new_list->get_value<int>(0);
     std::cout<<x;
 
