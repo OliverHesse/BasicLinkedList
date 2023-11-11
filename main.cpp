@@ -1,10 +1,12 @@
 // hello.cpp file
 #include <iostream>
+
 class Base_node{
     public:
     virtual void add_node(Base_node* new_node){}
     virtual Base_node* incr(){return nullptr;}
     virtual void print(){}
+    virtual void* get_value(){return nullptr;}
 };
 
 template<class T>
@@ -13,7 +15,7 @@ class node: public Base_node{
         Base_node* next_node = nullptr;
         T value;
     public:
-        
+  
         node(T value){
             this->value = value;
         }
@@ -30,6 +32,9 @@ class node: public Base_node{
         void print(){
 
             std::cout<<this->value;
+        }
+        void* get_value(){
+            return &value;
         }
 };
 
@@ -70,7 +75,21 @@ class linked_list{
         }
         // std::ostream is the type for object std::cout
         
- 
+        void get(int index){
+            int count = 0;
+            Base_node* current_node = root;
+            while (current_node != nullptr){
+                if(count == index){
+                    
+                    current_node->print();
+                    void* test = current_node->get_value();
+                    
+                    return;
+                }
+                count += 1;
+                current_node = current_node->incr();
+            }
+        }
 };
 
 
@@ -84,6 +103,6 @@ int main()
     new_list->push(4.5);
     new_list->push("T");
     new_list->print();
-   
+    new_list->get(2);
     return 0;
 }
