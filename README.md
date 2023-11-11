@@ -3,8 +3,11 @@ Allows for danyamicly typed linked list
 it can store multiple data types at the same time like 
 [1,2,4.5,"hello"]
 
+
 to initialise a new linked list you do this
 linked_list* new_list = new linked_list
+
+
 
 to add data to the list you have to use the push method. new_list->push(data);
 
@@ -23,6 +26,8 @@ This shouldnt cause any issues.
 to print the list just use
 new_list->print();
 
+
+
 if you want to retrive a piece of data you need two pieces of information. its index and type.
 
 this linked list uses 0 indexing
@@ -35,6 +40,9 @@ since it produces a bad alloc error when trying to cast to string and acts weird
 new_list->get_value<char*>(1);
 
 why? i dunno sill trying to work it out.
+
+
+
 
 features im planning on adding. type checking(this wont be there for a while), deleting items, chaniging item value,turning it into a header file and more.
 
