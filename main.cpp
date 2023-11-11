@@ -141,12 +141,13 @@ int main()
     linked_list* new_list = new linked_list;
     new_list->push(3);
     new_list->push(4.5f);
-    new_list->push("T");
+    std::string data ="Hello World!";
+    new_list->push("Hello World!");
     new_list->print();
   
 
     int x = new_list->get_value<int>(0);
-    std::cout<<x;
-
+    std::cout<<x<<"\n";
+    std::cout<<new_list->get_value<char*>(2);
     return 0;
 }
