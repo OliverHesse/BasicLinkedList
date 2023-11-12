@@ -3,22 +3,39 @@
 
 class Base_node{
     public:
+    
     virtual void add_node(Base_node* new_node){}
     virtual Base_node* incr(){return nullptr;}
     virtual void print(){}
     virtual void* get_value(){return nullptr;}
     virtual std::string get_type(){return "l";}
-    
+
 };
 
+private:
+    T value;
+
+public:
+    TypeWrapper(const T& val) : value(val) {}
+
+    const std::type_info& getType() const override {
+        return typeid(T);
+    }
+
+    const T& getValue() const {
+        return value;
+    }
+};
 template<class T>
 class node: public Base_node{
     private:
         Base_node* next_node = nullptr;
         T value;
         std::string type;
-        
+       
     public:
+        
+
         void* get_value(){
             return &value;
         }
@@ -29,8 +46,9 @@ class node: public Base_node{
             
             this->type = typeid(T).name();
             this->value = value;
+            
         }
-
+        
         void add_node(Base_node* new_node){
             next_node = new_node;
         }
@@ -72,6 +90,7 @@ class linked_list{
         }
 
         void print(){
+            
             std::cout << "[";
             Base_node* current_node = this->root;
             current_node->print();
@@ -108,6 +127,7 @@ class linked_list{
             Base_node* current_node = root;
             while (current_node != nullptr){
                 if(count == index){
+                   
                     return *(T*)current_node->get_value();
       
                 }
@@ -130,6 +150,41 @@ class linked_list{
             }
             throw std::invalid_argument("index does not exist");              
         }
+        void pop(){
+            
+            Base_node *temp_ptr = root;
+            root = root->incr();
+            delete temp_ptr;
+        }
+        void remove(int index){
+            int count = 0;
+            //they want to delete first node. quicker to pop
+    
+            if (index == 0){
+                this->pop();
+                return;              
+            }
+            Base_node* current_node = root;
+            Base_node* previous_node = nullptr;
+            while (current_node != nullptr){
+                if(count == index){
+                    
+                    //this is the node i want to delete
+                    //the node taht the current one points to
+                    Base_node* temp_ref = current_node->incr();
+                    //free up memory
+                    
+                    //rewire everything
+                    previous_node->add_node(temp_ref);
+                    delete current_node;
+                    return;
+                }
+                count += 1;
+                previous_node = current_node;
+                current_node = current_node->incr();
+            }
+            throw std::invalid_argument("index does not exist");               
+        }
 };
 
 
@@ -141,6 +196,8 @@ int main()
     linked_list* new_list = new linked_list;
     new_list->push(3);
     new_list->push(4.5f);
+    new_list->push(true);
+    new_list->push(24);
     std::string data ="Hello World!";
     new_list->push("Hello World!");
     new_list->print();
@@ -148,6 +205,9 @@ int main()
 
     int x = new_list->get_value<int>(0);
     std::cout<<x<<"\n";
-    std::cout<<new_list->get_value<char*>(2);
+    std::cout<<new_list->get_value<char*>(2)<<"\n";
+    new_list->pop();
+    new_list->remove(2);
+    new_list->print();
     return 0;
 }
