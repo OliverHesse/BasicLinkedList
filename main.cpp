@@ -12,20 +12,7 @@ class Base_node{
 
 };
 
-private:
-    T value;
 
-public:
-    TypeWrapper(const T& val) : value(val) {}
-
-    const std::type_info& getType() const override {
-        return typeid(T);
-    }
-
-    const T& getValue() const {
-        return value;
-    }
-};
 template<class T>
 class node: public Base_node{
     private:
@@ -187,10 +174,119 @@ class linked_list{
         }
 };
 
+template<class T>
+class static_node{
+    private:
+        T val;
+        static_node* next_node = nullptr;
+    public:
+        static_node(T new_val){
+            this->val = new_val;
+        }
+        void add_link(static_node* new_link){
+            this->next_node = new_link;
+        }
+        static_node* incr(){
+            return this->next_node;
+        }
+        T get_val(){
+            return this->val;
+        }
+    void print(){
+        std::cout<<this->val;
+    }
+};
 
+template <class T>
+class static_linked_list{
+    private:
+        static_node<T>* root = nullptr;
+        static_node<T>* last_node = nullptr;
+    public:
+        
+        void push(T new_val){
+            if (root == nullptr){
+                root = new static_node<T>(new_val);
+                last_node = root;
+                return;
+            }
+            static_node<T>* temp_ref = last_node;
+            last_node = new static_node<T>(new_val);
+            temp_ref->add_link(last_node);
+            temp_ref = nullptr;
+            
+        }
+        void pop(){
+            static_node<T>* temp_ref = root;
+            root = root->incr();
+            delete temp_ref;
+            
+        }
+        void print(){
+            std::cout << "[";
+            static_node<T>* current_node = this->root;
+            current_node->print();
+            while (current_node->incr() != nullptr){
+                
+                current_node = current_node->incr();
+                std::cout <<",";
+                current_node->print();
+                
 
-
-
+            }
+            std::cout <<"]"<<"\n";
+        }
+        void remove(int index){
+            int count = 0;
+            //they want to delete first node. quicker to pop
+    
+            if (index == 0){
+                this->pop();
+                return;              
+            }
+            static_node<T>* current_node = root;
+            static_node<T>* previous_node = nullptr;
+            while (current_node != nullptr){
+                if(count == index){
+                    
+                    //this is the node i want to delete
+                    //the node that the current one points to
+                    static_node<T>* temp_ref = current_node->incr();
+                    //free up memory
+                    
+                    //rewire everything
+                    previous_node->add_link(temp_ref);
+                    delete current_node;
+                    return;
+                }
+                count += 1;
+                previous_node = current_node;
+                current_node = current_node->incr();
+            }
+            throw std::invalid_argument("index does not exist");                 
+        }
+        T get_value(int index){
+            int count = 0;
+            //they want to delete first node. quicker to pop
+    
+            
+            static_node<T>* current_node = root;
+            static_node<T>* previous_node = nullptr;
+            while (current_node != nullptr){
+                if(count == index){
+                    
+                    //this is the node i want to delete
+                    //the node that the current one points to
+                    
+                    return current_node->get_val();
+                }
+                count += 1;
+                previous_node = current_node;
+                current_node = current_node->incr();
+            }
+            throw std::invalid_argument("index does not exist");               
+        }
+};
 int main()
 {
     linked_list* new_list = new linked_list;
@@ -205,9 +301,21 @@ int main()
 
     int x = new_list->get_value<int>(0);
     std::cout<<x<<"\n";
-    std::cout<<new_list->get_value<char*>(2)<<"\n";
+    std::cout<<new_list->get_value<char*>(4)<<"\n";
     new_list->pop();
     new_list->remove(2);
     new_list->print();
+    static_linked_list<int>* new_static_linked_list = new static_linked_list<int>;
+    new_static_linked_list->push(1);
+    new_static_linked_list->push(3);
+    new_static_linked_list->push(2);
+    new_static_linked_list->push(24);
+    new_static_linked_list->push(5);
+    new_static_linked_list->print();
+    new_static_linked_list->pop();
+    new_static_linked_list->remove(2);
+    new_static_linked_list->print();
+    std::cout<<new_static_linked_list->get_value(1)<<"\n";
+
     return 0;
 }
